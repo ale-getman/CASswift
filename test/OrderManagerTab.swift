@@ -42,6 +42,8 @@ class OrderManagerTab: UITableViewController {
     }
 
     func onResume() {
+        RequestToServAll()
+        sleep(2)
         createArrays()
         tableView.reloadData()
         refreshControl?.endRefreshing()
@@ -150,6 +152,71 @@ class OrderManagerTab: UITableViewController {
         }
         return cell
     }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        println(id_name_date_arr[indexPath.row])
+        nameOrderText_2 = id_name_date_arr[indexPath.row]
+        technicOrderText_2 = technic_order_arr[indexPath.row]
+        addressOrderText_2 = address_arr[indexPath.row]
+        statusOrderText_2 = status_arr[indexPath.row]
+        globalId_2 = globalId_arr_2[indexPath.row]
+        globalImgUrl_2 = imgurl_arr[indexPath.row]
+        //var toShow = self.storyboard?.instantiateViewControllerWithIdentifier("OrderDriverTabID") as UITabBarController
+        //self.navigationController?.pushViewController(toShow, animated: true)
+        
+    }
+    
+    func RequestToServAll(){
+        let myUrl = NSURL(string: "http://82.146.52.50//dis//login_a.php/")
+        let request = NSMutableURLRequest(URL:myUrl)
+        request.HTTPMethod = "POST"
+        // Compose a query string
+        let date = NSDate()
+        let calendar = NSCalendar.currentCalendar()
+        let components = calendar.components(.CalendarUnitHour | .CalendarUnitMinute | .CalendarUnitSecond | .CalendarUnitYear | .CalendarUnitMonth | .CalendarUnitDay, fromDate: date)
+        let hour = components.hour
+        let minutes = components.minute
+        let seconds = components.second
+        let years = components.year
+        let month = components.month
+        let day = components.day
+        
+        var postString = "login=\(globalLogin)&pass=\(globalPas)&loc_x=\(globalLong)&loc_y=\(globalLat)&time=\(hour):\(minutes):\(seconds) \(day).\(month).\(years)&address=\(globalAddress)&network_status=online"
+        
+        println(postString)
+        
+        request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+        
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            data, response, error in
+            
+            if error != nil
+            {
+                println("error=\(error)")
+                return
+            }
+            
+            // You can print out response object
+            //println("response = \(response)")
+            
+            // Print out response body
+            let responseString = NSString(data: data, encoding: NSUTF8StringEncoding)
+            //println("responseString = \(responseString)")
+            //ViewDriver.buffText = responseString
+            globalbuffer = responseString
+            //Let’s convert response sent from a server side script to a NSDictionary object:
+            
+            var err: NSError?
+            var myJSON = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error:&err) as? NSDictionary
+            
+            bufRequest_2 = myJSON
+            //println("myJSON: \(myJSON)")
+            // type tech flag id name date status technic who address loc_x loc_y image_url
+        }
+        
+        task.resume()
+    }
+
     /*
     override func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
         let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as UITableViewCell

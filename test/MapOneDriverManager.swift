@@ -10,6 +10,10 @@ import UIKit
 
 class MapOneDriverManager: UIViewController {
 
+    @IBAction func backBtn(sender: AnyObject) {
+        self.dismissViewControllerAnimated(false, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

@@ -10,6 +10,11 @@ import UIKit
 
 class MapOrderManagerView: UIViewController {
 
+    @IBAction func backBtn(sender: AnyObject) {
+        flagMoveView_2 = 1
+        self.dismissViewControllerAnimated(false, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

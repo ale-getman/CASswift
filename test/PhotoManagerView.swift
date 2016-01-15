@@ -8,11 +8,25 @@
 
 import UIKit
 
+var globalImgUrl_2 : String!
+
 class PhotoManagerView: UIViewController {
 
+    @IBOutlet weak var photoOrder: UIImageView!
+    
+    @IBAction func backBtn(sender: AnyObject) {
+        flagMoveView_2 = 1
+        self.dismissViewControllerAnimated(false, completion: nil)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        if globalImgUrl_2 != ""
+        {
+            var imgURL: NSURL = NSURL(string: globalImgUrl_2)
+            var imgData: NSData = NSData(contentsOfURL: imgURL)
+            photoOrder.image = UIImage(data: imgData)
+        }
         // Do any additional setup after loading the view.
     }
 
